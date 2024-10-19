@@ -1,5 +1,7 @@
 import { User } from './types';
+import { v4 as uuiV4 } from 'uuid';
 
+const id = uuiV4();
 export const store = new Map<string, User>([
-  ['1', { id: '1', username: 'Maxim', age: 37, hobbies: ['coding'] }],
+  [id, { id: id, username: 'Maxim', age: 37, hobbies: ['coding'] }],
 ]);
