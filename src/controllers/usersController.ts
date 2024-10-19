@@ -19,7 +19,7 @@ export function getUserById(res: http.ServerResponse, userId: string | undefined
       res.end(JSON.stringify({ message: `User with ${userId} does not exist` }));
     }
   } else {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(400, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ message: 'User Id is invalid' }));
   }
 }
