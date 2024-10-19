@@ -90,3 +90,21 @@ export function updateUser(
     res.end(JSON.stringify({ message: 'User Id is invalid' }));
   }
 }
+
+export function deleteUser(res: http.ServerResponse, userId: string | undefined): void {
+  if (userId && uuidValidateV4(userId)) {
+    const user = store.get(userId as string);
+
+    if (user) {
+      store.delete(userId);
+      res.writeHead(204, { 'Content-Type': 'application/json' });
+      res.end();
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `User with ${userId} does not exist` }));
+    }
+  } else {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'User Id is invalid' }));
+  }
+}
