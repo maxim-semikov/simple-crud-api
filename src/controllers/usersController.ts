@@ -47,7 +47,7 @@ export function createUser(req: http.IncomingMessage, res: http.ServerResponse):
         );
       }
     } catch {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'Error parsing JSON' }));
     }
   });
@@ -77,7 +77,7 @@ export function updateUser(
           res.writeHead(201, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(updatedData));
         } catch {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ message: 'Error parsing JSON' }));
         }
       });
