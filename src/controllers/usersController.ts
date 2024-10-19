@@ -1,6 +1,6 @@
 import http from 'http';
 import { getStoreValues, store } from '../store';
-import { createUUID, uuidValidateV4 } from '../helpers/uuidHelpers';
+import { createUUID, getRequestBody, uuidValidateV4 } from '../helpers';
 
 export function getUsers(res: http.ServerResponse): void {
   res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -24,14 +24,13 @@ export function getUserById(res: http.ServerResponse, userId: string | undefined
   }
 }
 
-export function createUser(req: http.IncomingMessage, res: http.ServerResponse): void {
-  let body = '';
+export async function createUser(
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+): Promise<void> {
+  try {
+    const body = await getRequestBody(req);
 
-  req.on('data', (chunk) => {
-    body += chunk.toString();
-  });
-
-  req.on('end', () => {
     try {
       const newUser = JSON.parse(body);
 
@@ -50,37 +49,40 @@ export function createUser(req: http.IncomingMessage, res: http.ServerResponse):
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'Error parsing JSON' }));
     }
-  });
+  } catch {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'Error reading the request body' }));
+  }
 }
 
-export function updateUser(
+export async function updateUser(
   req: http.IncomingMessage,
   res: http.ServerResponse,
   userId: string | undefined,
-): void {
+): Promise<void> {
   if (userId && uuidValidateV4(userId)) {
     const user = store.get(userId as string);
 
     if (user) {
-      let body = '';
+      try {
+        const body = await getRequestBody(req);
 
-      req.on('data', (chunk) => {
-        body += chunk.toString();
-      });
-
-      req.on('end', () => {
         try {
           const newUserData = JSON.parse(body);
           const updatedData = { ...user, ...newUserData };
 
           store.set(userId, updatedData);
+
           res.writeHead(201, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(updatedData));
         } catch {
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ message: 'Error parsing JSON' }));
         }
-      });
+      } catch {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Error reading the request body' }));
+      }
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: `User with ${userId} does not exist` }));
