@@ -64,6 +64,16 @@ describe('Simple CRUD API', () => {
     expect(text).toEqual(JSON.stringify(user));
   });
 
+  it('DELETE /api/users/id should delete user by id', async () => {
+    const user = { ...testUser, id };
+    mockStore.set(id, user);
+    const { statusCode } = await supertest(server['server']).delete(`/api/users/${id}`);
+    expect(statusCode).toEqual(204);
+
+    const { text } = await supertest(server['server']).get('/api/users');
+    expect(text).toEqual('[]');
+  });
+
   test('GET some-non/existing/resource should return 404', async () => {
     const response = await supertest(server['server']).get('/non-existing-path');
     expect(response.status).toBe(404);
