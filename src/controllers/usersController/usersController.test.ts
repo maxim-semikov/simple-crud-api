@@ -64,6 +64,22 @@ describe('Simple CRUD API', () => {
     expect(text).toEqual(JSON.stringify(user));
   });
 
+  it('UPDATE /api/users/id should update user data', async () => {
+    const user = { ...testUser, id };
+    mockStore.set(id, user);
+    const username = 'John Doe';
+
+    const { statusCode, text } = await supertest(server['server'])
+      .put(`/api/users/${id}`)
+      .send({ username });
+
+    const response = JSON.parse(text);
+    const updatedUser = { ...user, username };
+
+    expect(statusCode).toEqual(201);
+    expect(response).toEqual(updatedUser);
+  });
+
   it('DELETE /api/users/id should delete user by id', async () => {
     const user = { ...testUser, id };
     mockStore.set(id, user);
