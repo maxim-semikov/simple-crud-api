@@ -21,4 +21,16 @@ export class SimpleCRUDServer {
     this.server.listen(port);
     console.log(`Server running on port ${port}`);
   }
+
+  stop(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.server.close((err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 }
