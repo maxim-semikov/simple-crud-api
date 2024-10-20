@@ -1,11 +1,12 @@
 import http from 'http';
 import { handleUserRequest } from './routes/userRoutes';
+import { CONTENT_TYPE, ERROR_MESSAGES } from './const';
 
-export const server = http.createServer((req, res) => {
+export const server = http.createServer(async (req, res) => {
   if (req.url?.startsWith('/api/users')) {
-    handleUserRequest(req, res);
+    await handleUserRequest(req, res);
   } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not Found');
+    res.writeHead(404, CONTENT_TYPE.TEXT);
+    res.end(ERROR_MESSAGES['404']);
   }
 });

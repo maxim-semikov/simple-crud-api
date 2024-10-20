@@ -1,9 +1,11 @@
 import http from 'http';
 import { getStoreValues, store } from '../store';
 import { createUUID, getRequestBody, uuidValidateV4 } from '../helpers';
+import { getUserNotExistMessage, USER_ERROR_MESSAGE } from './helpers';
+import { CONTENT_TYPE, ERROR_MESSAGES } from '../const';
 
 export function getUsers(res: http.ServerResponse): void {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.writeHead(200, CONTENT_TYPE.JSON);
   res.end(JSON.stringify(getStoreValues()));
 }
 
@@ -12,15 +14,15 @@ export function getUserById(res: http.ServerResponse, userId: string | undefined
     const user = store.get(userId as string);
 
     if (user) {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, CONTENT_TYPE.JSON);
       res.end(JSON.stringify(user));
     } else {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: `User with ${userId} does not exist` }));
+      res.writeHead(404, CONTENT_TYPE.JSON);
+      res.end(JSON.stringify({ message: getUserNotExistMessage(userId) }));
     }
   } else {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'User Id is invalid' }));
+    res.writeHead(400, CONTENT_TYPE.JSON);
+    res.end(JSON.stringify({ message: USER_ERROR_MESSAGE.INVALID_ID }));
   }
 }
 
@@ -37,21 +39,19 @@ export async function createUser(
       if (newUser?.username && newUser?.age && newUser?.hobbies) {
         const userId = createUUID();
         store.set(userId, { id: userId, ...newUser });
-        res.writeHead(201, { 'Content-Type': 'application/json' });
+        res.writeHead(201, CONTENT_TYPE.JSON);
         res.end(JSON.stringify(newUser));
       } else {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(
-          JSON.stringify({ message: 'Invalid user data. It does not contain required fields' }),
-        );
+        res.writeHead(400, CONTENT_TYPE.JSON);
+        res.end(JSON.stringify({ message: USER_ERROR_MESSAGE.INVALID_USER_DATA }));
       }
     } catch {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'Error parsing JSON' }));
+      res.writeHead(500, CONTENT_TYPE.JSON);
+      res.end(JSON.stringify({ message: ERROR_MESSAGES.JSON_PARS }));
     }
   } catch {
-    res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'Error reading the request body' }));
+    res.writeHead(500, CONTENT_TYPE.JSON);
+    res.end(JSON.stringify({ message: ERROR_MESSAGES.REQUEST_PARS }));
   }
 }
 
@@ -73,23 +73,23 @@ export async function updateUser(
 
           store.set(userId, updatedData);
 
-          res.writeHead(201, { 'Content-Type': 'application/json' });
+          res.writeHead(201, CONTENT_TYPE.JSON);
           res.end(JSON.stringify(updatedData));
         } catch {
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: 'Error parsing JSON' }));
+          res.writeHead(500, CONTENT_TYPE.JSON);
+          res.end(JSON.stringify({ message: ERROR_MESSAGES.JSON_PARS }));
         }
       } catch {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.writeHead(500, CONTENT_TYPE.JSON);
         res.end(JSON.stringify({ message: 'Error reading the request body' }));
       }
     } else {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: `User with ${userId} does not exist` }));
+      res.writeHead(404, CONTENT_TYPE.JSON);
+      res.end(JSON.stringify({ message: getUserNotExistMessage(userId) }));
     }
   } else {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'User Id is invalid' }));
+    res.writeHead(400, CONTENT_TYPE.JSON);
+    res.end(JSON.stringify({ message: USER_ERROR_MESSAGE.INVALID_ID }));
   }
 }
 
@@ -99,14 +99,14 @@ export function deleteUser(res: http.ServerResponse, userId: string | undefined)
 
     if (user) {
       store.delete(userId);
-      res.writeHead(204, { 'Content-Type': 'application/json' });
+      res.writeHead(204, CONTENT_TYPE.JSON);
       res.end();
     } else {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: `User with ${userId} does not exist` }));
+      res.writeHead(404, CONTENT_TYPE.JSON);
+      res.end(JSON.stringify({ message: getUserNotExistMessage(userId) }));
     }
   } else {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'User Id is invalid' }));
+    res.writeHead(400, CONTENT_TYPE.JSON);
+    res.end(JSON.stringify({ message: USER_ERROR_MESSAGE.INVALID_ID }));
   }
 }
