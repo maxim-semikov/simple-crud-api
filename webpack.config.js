@@ -8,7 +8,7 @@ module.exports = {
       {
         test: /\.ts$/,
         use: 'ts-loader',
-        exclude: [/node_modules/, /dist/],
+        exclude: [/node_modules/, /dist/, /(\.test\.ts|\.spec\.ts)$/],
       },
     ],
   },
