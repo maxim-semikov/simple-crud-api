@@ -1,4 +1,4 @@
-type UserId = string; // Или number, зависит от ваших требований
+export type UserId = string;
 
 export type User = {
   id: UserId;
