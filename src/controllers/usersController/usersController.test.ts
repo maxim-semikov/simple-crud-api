@@ -1,28 +1,30 @@
 import supertest from 'supertest';
 import { SimpleCRUDServer } from '../../server';
-import { store, User } from '../../store';
+import { User } from '../../store';
 import { createUUID } from '../../helpers';
 
 const id = createUUID();
+
 describe('Simple CRUD API', () => {
   let server: SimpleCRUDServer;
+  const testUser: User = {
+    username: 'John Smith',
+    age: 30,
+    hobbies: ['coding'],
+  } as User;
   const mockStore = new Map();
-  let testUser: User = {} as User;
 
   beforeAll(() => {
     server = new SimpleCRUDServer(mockStore);
     server.start('3010');
-    testUser = {
-      username: ' John Smith',
-      age: 30,
-      hobbies: ['coding'],
-    } as User;
+  });
+
+  afterEach(() => {
+    mockStore.clear();
   });
 
   afterAll(() => {
     server.stop();
-    mockStore.clear();
-    testUser = {} as User;
   });
 
   it('GET /api/users should return empty array of users', async () => {
@@ -34,7 +36,7 @@ describe('Simple CRUD API', () => {
 
   it('GET /api/users should return array of users', async () => {
     const user = { ...testUser, id };
-    store.set(id, user);
+    mockStore.set(id, user);
     const { statusCode, text } = await supertest(server['server']).get(`/api/users`);
 
     expect(statusCode).toEqual(200);
@@ -55,7 +57,7 @@ describe('Simple CRUD API', () => {
 
   it('GET /api/users/id should return user data by id', async () => {
     const user = { ...testUser, id };
-    store.set(id, user);
+    mockStore.set(id, user);
     const { statusCode, text } = await supertest(server['server']).get(`/api/users/${id}`);
 
     expect(statusCode).toEqual(200);
