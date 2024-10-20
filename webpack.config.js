@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 
 module.exports = {
   entry: './index.ts',
@@ -8,7 +8,7 @@ module.exports = {
       {
         test: /\.ts$/,
         use: 'ts-loader',
-        exclude: [/node_modules/, /dist/, /tests/],
+        exclude: [/node_modules/, /dist/],
       },
     ],
   },
