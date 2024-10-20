@@ -1,18 +1,18 @@
 import supertest from 'supertest';
 import { SimpleCRUDServer } from '../../server';
-import { User } from '../../store';
 import { createUUID } from '../../helpers';
+import { Store } from '../../store';
 
 const id = createUUID();
 
 describe('Simple CRUD API', () => {
   let server: SimpleCRUDServer;
-  const testUser: User = {
+  const testUser = {
     username: 'John Smith',
     age: 30,
     hobbies: ['coding'],
-  } as User;
-  const mockStore = new Map();
+  };
+  const mockStore = Store.createStore();
 
   beforeAll(() => {
     server = new SimpleCRUDServer(mockStore);
@@ -36,7 +36,7 @@ describe('Simple CRUD API', () => {
 
   it('GET /api/users should return array of users', async () => {
     const user = { ...testUser, id };
-    mockStore.set(id, user);
+    mockStore.setItem(id, user);
     const { statusCode, text } = await supertest(server['server']).get(`/api/users`);
 
     expect(statusCode).toEqual(200);
@@ -57,7 +57,7 @@ describe('Simple CRUD API', () => {
 
   it('GET /api/users/id should return user data by id', async () => {
     const user = { ...testUser, id };
-    mockStore.set(id, user);
+    mockStore.setItem(id, user);
     const { statusCode, text } = await supertest(server['server']).get(`/api/users/${id}`);
 
     expect(statusCode).toEqual(200);
@@ -66,7 +66,7 @@ describe('Simple CRUD API', () => {
 
   it('UPDATE /api/users/id should update user data', async () => {
     const user = { ...testUser, id };
-    mockStore.set(id, user);
+    mockStore.setItem(id, user);
     const username = 'John Doe';
 
     const { statusCode, text } = await supertest(server['server'])
@@ -82,7 +82,7 @@ describe('Simple CRUD API', () => {
 
   it('DELETE /api/users/id should delete user by id', async () => {
     const user = { ...testUser, id };
-    mockStore.set(id, user);
+    mockStore.setItem(id, user);
     const { statusCode } = await supertest(server['server']).delete(`/api/users/${id}`);
     expect(statusCode).toEqual(204);
 

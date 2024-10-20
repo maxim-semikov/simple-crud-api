@@ -1,12 +1,12 @@
 import http from 'node:http';
 import { handleUserRequest } from './routes/userRoutes';
 import { CONTENT_TYPE, ERROR_MESSAGES } from './const';
-import { StoreType } from './store';
+import { Store } from './store';
 
 export class SimpleCRUDServer {
   server: http.Server;
 
-  constructor(protected store: StoreType) {
+  constructor(protected store: Store) {
     this.server = http.createServer(async (req, res) => {
       if (req.url?.startsWith('/api/users')) {
         await handleUserRequest(store, req, res);
@@ -17,7 +17,7 @@ export class SimpleCRUDServer {
     });
   }
 
-  start(port: string) {
+  start(port: string | number) {
     this.server.listen(port);
     console.log(`Server running on port ${port}`);
   }

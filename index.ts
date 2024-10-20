@@ -1,9 +1,11 @@
 import { config } from 'dotenv';
 import { SimpleCRUDServer } from './src/server';
-import { store } from './src/store';
+import { Store } from './src/store';
 
 config();
 const PORT = process.env.PORT || '3000';
+
+const store = Store.createStore();
 
 const server = new SimpleCRUDServer(store);
 
