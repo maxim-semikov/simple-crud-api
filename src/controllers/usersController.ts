@@ -34,11 +34,12 @@ export async function createUser(
     const body = await getRequestBody(req);
 
     try {
-      const newUser = JSON.parse(body);
+      const newUserRequestData = JSON.parse(body);
 
-      if (newUser?.username && newUser?.age && newUser?.hobbies) {
+      if (newUserRequestData?.username && newUserRequestData?.age && newUserRequestData?.hobbies) {
         const userId = createUUID();
-        store.set(userId, { id: userId, ...newUser });
+        const newUser = { id: userId, ...newUserRequestData };
+        store.set(userId, newUser);
         res.writeHead(201, CONTENT_TYPE.JSON);
         res.end(JSON.stringify(newUser));
       } else {
