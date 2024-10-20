@@ -5,13 +5,11 @@ import { StoreType } from './store';
 
 export class SimpleCRUDServer {
   server: http.Server;
-  store: StoreType;
 
-  constructor(store: StoreType) {
-    this.store = store;
+  constructor(protected store: StoreType) {
     this.server = http.createServer(async (req, res) => {
       if (req.url?.startsWith('/api/users')) {
-        await handleUserRequest(req, res);
+        await handleUserRequest(store, req, res);
       } else {
         res.writeHead(404, CONTENT_TYPE.TEXT);
         res.end(ERROR_MESSAGES['404']);

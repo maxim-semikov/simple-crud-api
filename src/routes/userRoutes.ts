@@ -7,8 +7,10 @@ import {
   updateUser,
 } from '../controllers/usersController';
 import { CONTENT_TYPE, ERROR_MESSAGES } from '../const';
+import { StoreType } from '../store';
 
 export async function handleUserRequest(
+  store: StoreType,
   req: http.IncomingMessage,
   res: http.ServerResponse,
 ): Promise<void> {
@@ -16,18 +18,18 @@ export async function handleUserRequest(
   const url = req.url?.replace(/^\/api/, '');
 
   if (url === '/users' && method === 'GET') {
-    getUsers(res);
+    getUsers(store, res);
   } else if (url?.startsWith('/users') && method === 'POST') {
-    await createUser(req, res);
+    await createUser(store, req, res);
   } else if (url?.startsWith('/users/') && method === 'GET') {
     const id = url.split('/')[2];
-    getUserById(res, id);
+    getUserById(store, res, id);
   } else if (url?.startsWith('/users/') && method === 'PUT') {
     const id = url.split('/')[2];
-    await updateUser(req, res, id);
+    await updateUser(store, req, res, id);
   } else if (url?.startsWith('/users/') && method === 'DELETE') {
     const id = url.split('/')[2];
-    deleteUser(res, id);
+    deleteUser(store, res, id);
   } else {
     res.writeHead(404, CONTENT_TYPE.TEXT);
     res.end(ERROR_MESSAGES['404']);

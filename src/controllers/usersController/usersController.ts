@@ -1,15 +1,19 @@
 import http from 'http';
-import { getStoreValues, store } from '../../store';
+import { StoreType } from '../../store';
 import { createUUID, getRequestBody, uuidValidateV4 } from '../../helpers';
 import { getUserNotExistMessage, USER_ERROR_MESSAGE } from './helpers';
 import { CONTENT_TYPE, ERROR_MESSAGES } from '../../const';
 
-export function getUsers(res: http.ServerResponse): void {
+export function getUsers(store: StoreType, res: http.ServerResponse): void {
   res.writeHead(200, CONTENT_TYPE.JSON);
-  res.end(JSON.stringify(getStoreValues()));
+  res.end(JSON.stringify(store.size ? Array.from(store.values()) : []));
 }
 
-export function getUserById(res: http.ServerResponse, userId: string | undefined): void {
+export function getUserById(
+  store: StoreType,
+  res: http.ServerResponse,
+  userId: string | undefined,
+): void {
   if (userId && uuidValidateV4(userId)) {
     const user = store.get(userId as string);
 
@@ -27,6 +31,7 @@ export function getUserById(res: http.ServerResponse, userId: string | undefined
 }
 
 export async function createUser(
+  store: StoreType,
   req: http.IncomingMessage,
   res: http.ServerResponse,
 ): Promise<void> {
@@ -57,6 +62,7 @@ export async function createUser(
 }
 
 export async function updateUser(
+  store: StoreType,
   req: http.IncomingMessage,
   res: http.ServerResponse,
   userId: string | undefined,
@@ -94,7 +100,11 @@ export async function updateUser(
   }
 }
 
-export function deleteUser(res: http.ServerResponse, userId: string | undefined): void {
+export function deleteUser(
+  store: StoreType,
+  res: http.ServerResponse,
+  userId: string | undefined,
+): void {
   if (userId && uuidValidateV4(userId)) {
     const user = store.get(userId as string);
 
