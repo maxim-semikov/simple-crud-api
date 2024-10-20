@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 
 export const getRequestBody = (req: http.IncomingMessage): Promise<string> =>
   new Promise((resolve, reject) => {

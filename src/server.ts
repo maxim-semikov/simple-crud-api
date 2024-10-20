@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 import { handleUserRequest } from './routes/userRoutes';
 import { CONTENT_TYPE, ERROR_MESSAGES } from './const';
 import { StoreType } from './store';

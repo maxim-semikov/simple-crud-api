@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 import { StoreType } from '../../store';
 import { createUUID, getRequestBody, uuidValidateV4 } from '../../helpers';
 import { getUserNotExistMessage, USER_ERROR_MESSAGE } from './helpers';
