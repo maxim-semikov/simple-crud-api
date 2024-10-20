@@ -88,7 +88,7 @@ export async function updateUser(
         }
       } catch {
         res.writeHead(500, CONTENT_TYPE.JSON);
-        res.end(JSON.stringify({ message: 'Error reading the request body' }));
+        res.end(JSON.stringify({ message: ERROR_MESSAGES.REQUEST_PARS }));
       }
     } else {
       res.writeHead(404, CONTENT_TYPE.JSON);
