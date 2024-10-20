@@ -1,12 +1,14 @@
 import http from 'http';
 import { handleUserRequest } from './routes/userRoutes';
 import { CONTENT_TYPE, ERROR_MESSAGES } from './const';
-import { StoreTyp } from './store';
+import { StoreType } from './store';
 
 export class SimpleCRUDServer {
   server: http.Server;
+  store: StoreType;
 
-  constructor(private store: StoreTyp) {
+  constructor(store: StoreType) {
+    this.store = store;
     this.server = http.createServer(async (req, res) => {
       if (req.url?.startsWith('/api/users')) {
         await handleUserRequest(req, res);

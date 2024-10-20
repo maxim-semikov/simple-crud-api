@@ -1,3 +1,3 @@
-import { StoreTyp } from './types';
+import { StoreType } from './types';
 
-export const store: StoreTyp = new Map();
+export const store: StoreType = new Map();

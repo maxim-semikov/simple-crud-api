@@ -7,4 +7,4 @@ export type User = {
   hobbies: string[];
 };
 
-export type StoreTyp = Map<UserId, User>;
+export type StoreType = Map<UserId, User>;
