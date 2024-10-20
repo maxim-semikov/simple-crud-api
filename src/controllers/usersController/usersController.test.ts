@@ -14,11 +14,10 @@ describe('Simple CRUD API', () => {
     server.start('3010');
     id = createUUID();
     testUser = {
-      id,
       username: ' John Smith',
       age: 30,
       hobbies: ['coding'],
-    };
+    } as User;
   });
 
   afterAll(() => {
@@ -35,11 +34,24 @@ describe('Simple CRUD API', () => {
   });
 
   it('GET /api/users should return array of users', async () => {
-    store.set(id, testUser);
+    const user = { ...testUser, id };
+    store.set(id, user);
     const { statusCode, text } = await supertest(server['server']).get(`/api/users`);
 
     expect(statusCode).toEqual(200);
-    expect(text).toEqual(JSON.stringify([testUser]));
+    expect(text).toEqual(JSON.stringify([user]));
+  });
+
+  it('POST /api/users should create new user and send data back', async () => {
+    const { statusCode, text } = await supertest(server['server'])
+      .post(`/api/users`)
+      .send(testUser);
+    const response = JSON.parse(text);
+    const { id: newUserID } = response;
+    const newUser = { ...testUser, id: newUserID };
+
+    expect(statusCode).toEqual(201);
+    expect(response).toEqual(newUser);
   });
 
   test('GET some-non/existing/resource should return 404', async () => {
