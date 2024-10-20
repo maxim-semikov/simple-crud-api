@@ -36,10 +36,10 @@ describe('Simple CRUD API', () => {
 
   it('GET /api/users should return array of users', async () => {
     store.set(id, testUser);
-    const { statusCode, text } = await supertest(server['server']).get(`/api/users/${id}`);
+    const { statusCode, text } = await supertest(server['server']).get(`/api/users`);
 
     expect(statusCode).toEqual(200);
-    expect(text).toEqual(JSON.stringify(testUser));
+    expect(text).toEqual(JSON.stringify([testUser]));
   });
 
   test('GET some-non/existing/resource should return 404', async () => {
