@@ -1,8 +1,8 @@
 import http from 'http';
-import { getStoreValues, store } from '../store';
-import { createUUID, getRequestBody, uuidValidateV4 } from '../helpers';
+import { getStoreValues, store } from '../../store';
+import { createUUID, getRequestBody, uuidValidateV4 } from '../../helpers';
 import { getUserNotExistMessage, USER_ERROR_MESSAGE } from './helpers';
-import { CONTENT_TYPE, ERROR_MESSAGES } from '../const';
+import { CONTENT_TYPE, ERROR_MESSAGES } from '../../const';
 
 export function getUsers(res: http.ServerResponse): void {
   res.writeHead(200, CONTENT_TYPE.JSON);
