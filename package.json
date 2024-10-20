@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only ./index.ts",
+    "start:prod": "webpack --mode production && node dist/server.js",
     "test": "jest --silent",
     "test:verbose": "jest"
   },
