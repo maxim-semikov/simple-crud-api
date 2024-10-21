@@ -1,4 +1,5 @@
 import http from 'node:http';
+import cluster from 'node:cluster';
 import { handleUserRequest } from './routes/userRoutes';
 import { CONTENT_TYPE, ERROR_MESSAGES } from './const';
 import { StoreInterface } from './store';
@@ -19,7 +20,11 @@ export class SimpleCRUDServer {
 
   start(port: string | number) {
     this.server.listen(port);
-    console.log(`Server running on port ${port}`);
+    console.log(
+      cluster.isPrimary
+        ? `Server running on port ${port}`
+        : `Worker Server running on port ${port}`,
+    );
   }
 
   stop(): Promise<void> {

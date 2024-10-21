@@ -5,6 +5,7 @@
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only ./index.ts",
     "start:prod": "webpack --mode production && node dist/server.js",
+    "start:multy": "webpack --mode production && node dist/server.js --multi",
     "test": "jest --silent",
     "test:verbose": "jest"
   },
