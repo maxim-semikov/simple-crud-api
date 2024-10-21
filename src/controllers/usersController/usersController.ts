@@ -4,18 +4,19 @@ import { createUUID, getRequestBody, uuidValidateV4 } from '../../helpers';
 import { getUserNotExistMessage, USER_ERROR_MESSAGE } from './helpers';
 import { CONTENT_TYPE, ERROR_MESSAGES } from '../../const';
 
-export function getUsers(store: StoreInterface, res: http.ServerResponse): void {
+export async function getUsers(store: StoreInterface, res: http.ServerResponse): Promise<void> {
   res.writeHead(200, CONTENT_TYPE.JSON);
-  res.end(JSON.stringify(store.getStoreValues()));
+  const data = await store.getStoreValues();
+  res.end(JSON.stringify(data));
 }
 
-export function getUserById(
+export async function getUserById(
   store: StoreInterface,
   res: http.ServerResponse,
   userId: string | undefined,
-): void {
+): Promise<void> {
   if (userId && uuidValidateV4(userId)) {
-    const user = store.getItem(userId);
+    const user = await store.getItem(userId);
 
     if (user) {
       res.writeHead(200, CONTENT_TYPE.JSON);
@@ -44,7 +45,7 @@ export async function createUser(
       if (newUserRequestData?.username && newUserRequestData?.age && newUserRequestData?.hobbies) {
         const userId = createUUID();
         const newUser = { id: userId, ...newUserRequestData };
-        store.setItem(userId, newUser);
+        await store.setItem(userId, newUser);
         res.writeHead(201, CONTENT_TYPE.JSON);
         res.end(JSON.stringify(newUser));
       } else {
@@ -68,7 +69,7 @@ export async function updateUser(
   userId: string | undefined,
 ): Promise<void> {
   if (userId && uuidValidateV4(userId)) {
-    const user = store.getItem(userId as string);
+    const user = await store.getItem(userId as string);
 
     if (user) {
       try {
@@ -78,7 +79,7 @@ export async function updateUser(
           const newUserData = JSON.parse(body);
           const updatedData = { ...user, ...newUserData };
 
-          store.setItem(userId, updatedData);
+          await store.setItem(userId, updatedData);
 
           res.writeHead(201, CONTENT_TYPE.JSON);
           res.end(JSON.stringify(updatedData));
@@ -100,16 +101,16 @@ export async function updateUser(
   }
 }
 
-export function deleteUser(
+export async function deleteUser(
   store: StoreInterface,
   res: http.ServerResponse,
   userId: string | undefined,
-): void {
+): Promise<void> {
   if (userId && uuidValidateV4(userId)) {
-    const hasUser = store.hasItem(userId);
+    const hasUser = await store.hasItem(userId);
 
     if (hasUser) {
-      store.removeItem(userId);
+      await store.removeItem(userId);
       res.writeHead(204, CONTENT_TYPE.JSON);
       res.end();
     } else {

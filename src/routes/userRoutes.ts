@@ -18,18 +18,18 @@ export async function handleUserRequest(
   const url = req.url?.replace(/^\/api/, '');
 
   if (url === '/users' && method === 'GET') {
-    getUsers(store, res);
+    await getUsers(store, res);
   } else if (url?.startsWith('/users') && method === 'POST') {
     await createUser(store, req, res);
   } else if (url?.startsWith('/users/') && method === 'GET') {
     const id = url.split('/')[2];
-    getUserById(store, res, id);
+    await getUserById(store, res, id);
   } else if (url?.startsWith('/users/') && method === 'PUT') {
     const id = url.split('/')[2];
     await updateUser(store, req, res, id);
   } else if (url?.startsWith('/users/') && method === 'DELETE') {
     const id = url.split('/')[2];
-    deleteUser(store, res, id);
+    await deleteUser(store, res, id);
   } else {
     res.writeHead(404, CONTENT_TYPE.TEXT);
     res.end(ERROR_MESSAGES['404']);
