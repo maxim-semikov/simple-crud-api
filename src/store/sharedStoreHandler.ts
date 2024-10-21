@@ -4,7 +4,7 @@ import { messageInterface } from './types';
 
 const store = Store.createStore();
 
-export const storeWorkerHandler = (worker: Worker) => (msgFromWorker: messageInterface) => {
+export const sharedStoreHandler = (worker: Worker, msgFromWorker: messageInterface) => {
   if (msgFromWorker?.type === 'getStoreValues') {
     const data = store.getStoreValues();
     worker.send({ type: 'Response', data });
