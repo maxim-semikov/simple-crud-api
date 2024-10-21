@@ -1,16 +1,16 @@
 import http from 'node:http';
-import { Store } from '../../store';
+import { StoreInterface } from '../../store';
 import { createUUID, getRequestBody, uuidValidateV4 } from '../../helpers';
 import { getUserNotExistMessage, USER_ERROR_MESSAGE } from './helpers';
 import { CONTENT_TYPE, ERROR_MESSAGES } from '../../const';
 
-export function getUsers(store: Store, res: http.ServerResponse): void {
+export function getUsers(store: StoreInterface, res: http.ServerResponse): void {
   res.writeHead(200, CONTENT_TYPE.JSON);
   res.end(JSON.stringify(store.getStoreValues()));
 }
 
 export function getUserById(
-  store: Store,
+  store: StoreInterface,
   res: http.ServerResponse,
   userId: string | undefined,
 ): void {
@@ -31,7 +31,7 @@ export function getUserById(
 }
 
 export async function createUser(
-  store: Store,
+  store: StoreInterface,
   req: http.IncomingMessage,
   res: http.ServerResponse,
 ): Promise<void> {
@@ -62,7 +62,7 @@ export async function createUser(
 }
 
 export async function updateUser(
-  store: Store,
+  store: StoreInterface,
   req: http.IncomingMessage,
   res: http.ServerResponse,
   userId: string | undefined,
@@ -101,7 +101,7 @@ export async function updateUser(
 }
 
 export function deleteUser(
-  store: Store,
+  store: StoreInterface,
   res: http.ServerResponse,
   userId: string | undefined,
 ): void {

@@ -7,4 +7,11 @@ export type User = {
   hobbies: string[];
 };
 
-export type StoreType = Map<UserId, User>;
+export interface StoreInterface {
+  setItem(key: UserId, value: User): void;
+  getItem(key: UserId): User | undefined;
+  hasItem(key: UserId): boolean;
+  removeItem(key: UserId): boolean;
+  clear(): void;
+  getStoreValues(): User[];
+}

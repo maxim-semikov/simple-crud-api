@@ -1,6 +1,6 @@
-import { User, UserId } from './types';
+import { StoreInterface, User, UserId } from './types';
 
-export class Store {
+export class Store implements StoreInterface {
   private static instance: Store;
   private value: Map<UserId, User>;
 

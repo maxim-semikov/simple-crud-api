@@ -7,10 +7,10 @@ import {
   updateUser,
 } from '../controllers/usersController';
 import { CONTENT_TYPE, ERROR_MESSAGES } from '../const';
-import { Store } from '../store';
+import { StoreInterface } from '../store';
 
 export async function handleUserRequest(
-  store: Store,
+  store: StoreInterface,
   req: http.IncomingMessage,
   res: http.ServerResponse,
 ): Promise<void> {
